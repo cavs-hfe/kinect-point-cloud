@@ -1,0 +1,18 @@
+﻿<Window x:Class="KinectDepthToPointCloud.ParticipantNumberDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ParticipantNumberDialog" Height="120" Width="300">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Enter the current participant number:" />
+        <TextBox Grid.Row="1" Name="ParticipantNumberBox" Width="270" Text="1" Margin="0 5"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Button Name="OkButton" Content=" OK " Click="OkButton_Click" Margin="190 0 10 0"/>
+            <Button Name="CancelButton" Content=" Cancel " Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

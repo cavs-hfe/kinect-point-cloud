@@ -1,0 +1,46 @@
+﻿<Window x:Class="KinectDepthToPointCloud.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525"
+        Closing="MainWindow_Closing"
+        KeyDown="Window_KeyDown">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" >
+            <MenuItem Header="Data" >
+                <MenuItem Header="View Data" Command="{Binding ViewDataCommand}"/>
+                <MenuItem Header="Data Cleanup" Command="{Binding DataCleanupCommand}"/>
+            </MenuItem>          
+            <MenuItem Header="Participant">
+                <MenuItem Header="Participant Number" Command="{Binding ParticipantNumberCommand}"/>
+                <MenuItem Header="Participant Settings" Command="{Binding ParticipantSettingsCommad}" />
+                <MenuItem Header="Show Tutorial" Command="{Binding ShowTutorialCommand}" />
+            </MenuItem>
+        </Menu>
+        <Viewbox Grid.Row="1" HorizontalAlignment="Center">
+            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
+        </Viewbox>
+        <DockPanel Grid.Row="2" >
+            <Button Name="RecordButton" Content="Start Recording" Click="Button_Click" />
+        </DockPanel>
+        <DockPanel Grid.Row="3" >
+            <TextBlock Text="Min Depth: " Width="75" />
+            <TextBox Text="{Binding ElementName=minDepthSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" />
+            <Slider Name="minDepthSlider" Maximum="8" Value="{Binding MinDepth}"/>
+        </DockPanel>
+        <DockPanel Grid.Row="4" >
+            <TextBlock Text="Max Depth: " Width="75"/>
+            <TextBox Text="{Binding ElementName=maxDepthSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" />
+            <Slider Name="maxDepthSlider" Maximum="8" Value="{Binding MaxDepth}"/>
+        </DockPanel>
+        
+        
+
+    </Grid>
+</Window>
