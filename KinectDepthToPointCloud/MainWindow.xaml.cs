@@ -72,7 +72,7 @@ namespace KinectDepthToPointCloud
         public ICommand ParticipantSettingsCommad { get; set; }
         public ICommand ShowTutorialCommand { get; set; }
 
-        private int framesPerSecond = 5;
+        private int framesPerSecond = 15;
 
         private long lastFrameRecorded = 0;
 
@@ -728,26 +728,6 @@ namespace KinectDepthToPointCloud
             trialConditions.Enqueue(new MarkerCondition(true));
 
             trialConditions.Enqueue(new MarkerCondition(MarkerCondition.Hand.Both, "B3 B7"));
-            trialConditions.Enqueue(new MarkerCondition(true));
-
-            trialConditions.Enqueue(new MarkerCondition(standUpLabel));
-
-            trialConditions.Enqueue(new MarkerCondition(MarkerCondition.Hand.Left, "A2"));
-            trialConditions.Enqueue(new MarkerCondition(true));
-            trialConditions.Enqueue(new MarkerCondition(MarkerCondition.Hand.Right, "A2"));
-            trialConditions.Enqueue(new MarkerCondition(true));
-
-            trialConditions.Enqueue(new MarkerCondition(MarkerCondition.Hand.Left, "D7"));
-            trialConditions.Enqueue(new MarkerCondition(true));
-            trialConditions.Enqueue(new MarkerCondition(MarkerCondition.Hand.Right, "D7"));
-            trialConditions.Enqueue(new MarkerCondition(true));
-
-            trialConditions.Enqueue(new MarkerCondition(twoHandLabel));
-
-            trialConditions.Enqueue(new MarkerCondition(MarkerCondition.Hand.Both, "C1 A5"));
-            trialConditions.Enqueue(new MarkerCondition(true));
-
-            trialConditions.Enqueue(new MarkerCondition(MarkerCondition.Hand.Both, "B7 B3"));
             trialConditions.Enqueue(new MarkerCondition(true));
 
             trialConditions.Enqueue(new MarkerCondition(experiementCompleteLabel));
