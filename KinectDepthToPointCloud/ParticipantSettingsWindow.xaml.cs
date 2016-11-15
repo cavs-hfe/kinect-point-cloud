@@ -44,6 +44,7 @@ namespace KinectDepthToPointCloud
             ofd.Title = "Select sound file...";
             ofd.Filters.Add(new CommonFileDialogFilter("Sound files (*.mp3, *.wav)", ".mp3,.wav"));
             ofd.Multiselect = false;
+            ofd.InitialDirectory = System.IO.Path.GetDirectoryName(SoundFileTextBox.Text);
 
             if (ofd.ShowDialog() == CommonFileDialogResult.Ok)
             {
