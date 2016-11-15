@@ -11,6 +11,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" >
             <MenuItem Header="Data" >
@@ -26,21 +28,18 @@
         <Viewbox Grid.Row="1" HorizontalAlignment="Center">
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
         </Viewbox>
-        <DockPanel Grid.Row="2" >
+        <DockPanel Grid.Row="2" Margin="10">
             <Button Name="RecordButton" Content="Start Recording" Click="Button_Click" />
         </DockPanel>
-        <DockPanel Grid.Row="3" >
+        <DockPanel Grid.Row="3" Margin="5">
             <TextBlock Text="Min Depth: " Width="75" />
             <TextBox Text="{Binding ElementName=minDepthSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" />
             <Slider Name="minDepthSlider" Maximum="8" Value="{Binding MinDepth}"/>
         </DockPanel>
-        <DockPanel Grid.Row="4" >
+        <DockPanel Grid.Row="4" Margin="5">
             <TextBlock Text="Max Depth: " Width="75"/>
             <TextBox Text="{Binding ElementName=maxDepthSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Right" TextAlignment="Right" Width="40" />
             <Slider Name="maxDepthSlider" Maximum="8" Value="{Binding MaxDepth}"/>
         </DockPanel>
-        
-        
-
     </Grid>
 </Window>

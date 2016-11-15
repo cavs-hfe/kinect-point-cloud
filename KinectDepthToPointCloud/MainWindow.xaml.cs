@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -55,7 +56,7 @@ namespace KinectDepthToPointCloud
 
         private double minDepth = 0;
 
-        private double maxDepth = 2.3;
+        private double maxDepth = 2.5;
 
         private string path = @"C:\Users\CAVS\Desktop\KinectPointCloud\";
 
@@ -320,9 +321,17 @@ namespace KinectDepthToPointCloud
                 }
 
                 CurrentStatus = currentCondition.status;
+                if (currentCondition.fixation)
+                {
+                    SystemSounds.Beep.Play();
+                }
                 ShowFixation = currentCondition.fixation;
 
                 imageCount = 0;
+            }
+            else if (trialConditions.Count == 0 && timerRunning)
+            {
+                StopTimer();
             }
         }
 
@@ -600,6 +609,8 @@ namespace KinectDepthToPointCloud
 
                 using (StreamWriter streamWriter = new StreamWriter(System.IO.Path.Combine(path, participantDirectory, filename)))
                 {
+
+                    //write file header
                     streamWriter.WriteLine("VERSION .7");
                     streamWriter.WriteLine("FIELDS x y z");
                     streamWriter.WriteLine("SIZE 4 4 4");
@@ -611,6 +622,7 @@ namespace KinectDepthToPointCloud
                     streamWriter.WriteLine("POINTS " + lines.Count);
                     streamWriter.WriteLine("DATA ascii");
 
+                    //write points
                     foreach (string s in lines)
                     {
                         streamWriter.WriteLine(s);
