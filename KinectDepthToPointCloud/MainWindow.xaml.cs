@@ -104,6 +104,7 @@ namespace KinectDepthToPointCloud
         private bool timerRunning = false;
 
         private bool showFixation = true;
+        private string pathToFixationSound = @"C:\Users\CAVS\Desktop\KinectPointCloud\beep.mp3";
 
         public MainWindow()
         {
@@ -161,13 +162,14 @@ namespace KinectDepthToPointCloud
 
         private void ParticipantSettings()
         {
-            ParticipantSettingsWindow psw = new ParticipantSettingsWindow(useTimer, nextMarkerTimerSeconds);
+            ParticipantSettingsWindow psw = new ParticipantSettingsWindow(useTimer, nextMarkerTimerSeconds, pathToFixationSound);
             psw.Owner = this;
 
             if (psw.ShowDialog() == true)
             {
                 useTimer = psw.UseTimer;
                 nextMarkerTimerSeconds = psw.TimerSeconds;
+                pathToFixationSound = psw.FixationSoundFile;
             }
         }
 
@@ -323,7 +325,12 @@ namespace KinectDepthToPointCloud
                 CurrentStatus = currentCondition.status;
                 if (currentCondition.fixation)
                 {
-                    SystemSounds.Beep.Play();
+                    if (File.Exists(pathToFixationSound))
+                    {
+                        MediaPlayer player = new MediaPlayer();
+                        player.Open(new Uri(pathToFixationSound));
+                        player.Play();
+                    }
                 }
                 ShowFixation = currentCondition.fixation;
 
