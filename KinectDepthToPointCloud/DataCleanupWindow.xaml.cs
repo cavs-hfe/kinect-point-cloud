@@ -204,15 +204,15 @@ namespace KinectDepthToPointCloud
                 }
             }
 
-            /*Process p = new Process();
-            p.StartInfo.FileName = "pcl_outlier_removal_release.exe";
-            p.StartInfo.Arguments = s + " " + System.IO.Path.Combine(path, "clean", System.IO.Path.GetFileNameWithoutExtension(s) + "-temp.pcd") + " -method statistical -mean_k " + meanK + " -std_dev_mul " + stdDevMultiplier + " -inliers 0";
+            Process p = new Process();
+            p.StartInfo.FileName = "pcl_voxel_grid_release.exe";
+            p.StartInfo.Arguments = System.IO.Path.Combine(path, "merge", "merged.pcd") + " " + System.IO.Path.Combine(path, "merge", "merged-reduced.pcd");
             p.StartInfo.UseShellExecute = false;
             p.StartInfo.CreateNoWindow = true;
 
             p.Start();
 
-            p.WaitForExit();*/
+            p.WaitForExit();
         }
 
         public int CurrentPoint

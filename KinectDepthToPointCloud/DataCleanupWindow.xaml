@@ -24,7 +24,7 @@
             <TextBox Name="DirectoryBox" Width="200" />
             <Button Name="BrowseButton" Width="75" Content="Browse" Click="BrowseButton_Click" />
         </StackPanel>
-        <Separator Grid.Row="2" />
+        <Separator Grid.Row="2" Margin="0 10"/>
         <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0 5">
             <TextBlock Text="Filter Type: " />
             <RadioButton x:Name="RadiusRadio" GroupName="filterType" Content="Radius" Margin="0 0 5 0"/>
@@ -33,34 +33,28 @@
         <StackPanel Orientation="Vertical" Grid.Row="4" Visibility="{Binding IsChecked, ElementName=RadiusRadio, Converter={StaticResource b2v}}">
             <StackPanel Orientation="Horizontal" Margin="0 5">
                 <TextBlock Text="Filter Distance: " />
-                <TextBox Name="FilterDistanceBox" Width="50" />
+                <TextBox Name="FilterDistanceBox" Width="50" Text="0.1"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0 5">
                 <TextBlock Text="Min Points: " />
-                <TextBox Name="MinPointsBox" Width="50" />
+                <TextBox Name="MinPointsBox" Width="50" Text="5" />
             </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="4" Visibility="{Binding IsChecked, ElementName=StatRadio, Converter={StaticResource b2v}}">
             <StackPanel Orientation="Horizontal" Margin="0 5">
                 <TextBlock Text="MeanK: " />
-                <TextBox Name="MeanKBox" Width="50" />
+                <TextBox Name="MeanKBox" Width="50" Text="50"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0 5">
                 <TextBlock Text="Standard Deviation: " />
-                <TextBox Name="StdDevBox" Width="50" />
+                <TextBox Name="StdDevBox" Width="50" Text="1"/>
             </StackPanel>
         </StackPanel>
 
         <Button Grid.Row="5" Name="CleanButton" Content="Clean" Click="CleanButton_Click" />
 
-        <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="0 10">
-            <TextBlock Text="Overall Progress: " />
-            <TextBlock Text="{Binding CurrentFile}" />
-            <TextBlock Text="/" />
-            <TextBlock Text="{Binding TotalFiles}" />
-        </StackPanel>
-        <Separator Grid.Row="7" />
-        <TextBlock Grid.Row="8" Text="Merge and Reduce Files" Margin="0 10"/>
-        <Button Content="Merge and Reduce" Grid.Row="9" Name="MergeButton" Click="MergeButton_Click" />
+        <Separator Grid.Row="6" Margin="0 10"/>
+        <TextBlock Grid.Row="7" Text="Merge and Reduce Files" Margin="0 10"/>
+        <Button Content="Merge and Reduce" Grid.Row="8" Name="MergeButton" Click="MergeButton_Click" />
     </Grid>
 </Window>
