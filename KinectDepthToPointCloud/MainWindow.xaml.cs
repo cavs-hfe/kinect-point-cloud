@@ -224,6 +224,7 @@ namespace KinectDepthToPointCloud
             CurrentStatus = "Ready to begin!";
         }
 
+        //setup and start the slide timer
         private void StartTimer()
         {
             timer = new System.Windows.Forms.Timer();
@@ -233,11 +234,13 @@ namespace KinectDepthToPointCloud
             timerRunning = true;
         }
 
+        //every timer interval, proceed to the next marker
         private void timer_Tick(object sender, EventArgs e)
         {
             NextMarker();
         }
 
+        //stop the slide timer
         private void StopTimer()
         {
             timer.Stop();
@@ -245,12 +248,16 @@ namespace KinectDepthToPointCloud
             timerRunning = false;
         }
 
+        /// <summary>
+        /// Load the next marker in the queue for display in the participant window
+        /// </summary>
         private void NextMarker()
         {
             if (trialConditions.Count > 0)
             {
                 MarkerCondition currentCondition = trialConditions.Dequeue();
 
+                //if the condition status equals a label, change the state of the program
                 if (currentCondition.status.Equals(twoHandLabel) && state == ConditionState.SeatedOneHanded)
                 {
                     state = ConditionState.SeatedTwoHanded;
@@ -262,13 +269,16 @@ namespace KinectDepthToPointCloud
                 else if (currentCondition.status.Equals(standUpLabel))
                 {
                     state = ConditionState.StandingOneHanded;
+                    //stop recording temporarily to allow participant time to stand up and time to adjust rack
                     StopRecording();
                 }
                 else if (currentCondition.status.Equals(experiementCompleteLabel))
                 {
+                    //we are done, stop recording
                     StopRecording();
                 }
 
+                //setup next point cloud file name
                 string lastFileName = fileName;
                 fileName = "";
 
@@ -322,7 +332,10 @@ namespace KinectDepthToPointCloud
                     }
                 }
 
+                //display the status message
                 CurrentStatus = currentCondition.status;
+
+                //if it is a fixation, play a sound and display the fixation cross
                 if (currentCondition.fixation)
                 {
                     if (File.Exists(pathToFixationSound))
@@ -600,12 +613,21 @@ namespace KinectDepthToPointCloud
             }
         }
 
+        /// <summary>
+        /// Take the depth data and write a PCD file containing the depth points that are within the specified range.
+        /// </summary>
+        /// <param name="cameraSpacePoints">Array of camera space points containing depth data from frame</param>
+        /// <param name="minDepth">Filter out any points closer to the sensor than this value</param>
+        /// <param name="maxDepth">Filter out any points further away from the sensor than this value</param>
+        /// <param name="filename">Name of file to output data to</param>
         private void ProcessDepthFrameDataToFile(CameraSpacePoint[] cameraSpacePoints, ushort minDepth, ushort maxDepth, string filename)
         {
+            //run this process asynchronously
             Task t = Task.Run(() =>
             {
                 List<string> lines = new List<string>();
 
+                //get the points that fall within the specified range
                 foreach (CameraSpacePoint csp in cameraSpacePoints)
                 {
                     if (csp.Z >= minDepth && csp.Z <= maxDepth)
@@ -614,6 +636,7 @@ namespace KinectDepthToPointCloud
                     }
                 }
 
+                //write those points to file
                 using (StreamWriter streamWriter = new StreamWriter(System.IO.Path.Combine(path, participantDirectory, filename)))
                 {
 
@@ -652,33 +675,45 @@ namespace KinectDepthToPointCloud
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //if the recording button is clicked and we are already recording, stop
             if (recording)
             {
                 StopRecording();
             }
-            else if(participantNumber != 0)
+            else if(participantNumber != 0) 
             {
+                //else if we have a participant loaded and we are in the standing state (we've already done the seated and are stopped to allow user to stand up)
                 if (state == ConditionState.StandingOneHanded)
                 {
+                    //start recording but don't reset frame counters
                     StartRecording(false);
                 }
                 else
                 {
+                    //otherwise start a new recording
                     StartRecording();
                 }
 
             }
             else if(useTimer && !timerRunning)
             {
+                //otherwise, if we haven't set the participant number, we must be in tutorial phase, just start the timer and don't start recording
                 StartTimer();
             }
         }
 
+        /// <summary>
+        /// Start recording and reset frame counters (same as StartRecording(true)
+        /// </summary>
         private void StartRecording()
         {
             StartRecording(true);
         }
 
+        /// <summary>
+        /// Start recoring. If resetFrameCounters is true, frame numbers will be set to 0 before starting recording
+        /// </summary>
+        /// <param name="resetFrameCounters">Whether to reset frame counters</param>
         private void StartRecording(bool resetFrameCounters)
         {
             RecordButton.Content = "Stop Recording";
@@ -695,6 +730,9 @@ namespace KinectDepthToPointCloud
             }
         }
 
+        /// <summary>
+        /// Stop a recording
+        /// </summary>
         private void StopRecording()
         {
             RecordButton.Content = "Start Recording";
@@ -705,6 +743,9 @@ namespace KinectDepthToPointCloud
             }
         }
 
+        /// <summary>
+        /// Open playback window
+        /// </summary>
         private void ViewData()
         {
             PlaybackWindow pw = new PlaybackWindow();
@@ -712,6 +753,9 @@ namespace KinectDepthToPointCloud
             pw.Show();
         }
 
+        /// <summary>
+        /// Open data cleanup window
+        /// </summary>
         private void LaunchDataCleanup()
         {
             DataCleanupWindow dcw = new DataCleanupWindow();
@@ -719,6 +763,7 @@ namespace KinectDepthToPointCloud
             dcw.Show();
         }
 
+        //if we're not using a timer, we can use the right arrow to step through markers
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Right && !useTimer)
@@ -727,6 +772,9 @@ namespace KinectDepthToPointCloud
             }
         }
 
+        /// <summary>
+        /// Load a tutorial set of markers into the queue (two left hand, two right hand, and two both hand)
+        /// </summary>
         private void ShowTutorial()
         {
             trialConditions = new Queue<MarkerCondition>();

@@ -37,6 +37,21 @@ namespace KinectDepthToPointCloud
 
         public ICommand OpenDirectoryCommand { get; set; }
 
+        //setup window
+        public PlaybackWindow()
+        {
+            InitializeComponent();
+
+            this.OpenDirectoryCommand = new DelegateCommand(this.OpenDirectory);
+
+            prevButton.IsEnabled = false;
+            nextButton.IsEnabled = false;
+
+            this.DataContext = this;
+        }
+
+        #region Property Code
+
         public int NumberOfFrames
         {
             get { return numberOfFrames; }
@@ -78,17 +93,7 @@ namespace KinectDepthToPointCloud
             }
         }
 
-        public PlaybackWindow()
-        {
-            InitializeComponent();
-
-            this.OpenDirectoryCommand = new DelegateCommand(this.OpenDirectory);
-
-            prevButton.IsEnabled = false;
-            nextButton.IsEnabled = false;
-
-            this.DataContext = this;
-        }
+        #endregion
 
         /// <summary>
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
@@ -113,6 +118,7 @@ namespace KinectDepthToPointCloud
             }
         }
 
+        //show directory picker and load point clouds
         private void OpenDirectory()
         {
             CommonOpenFileDialog ofd = new CommonOpenFileDialog();
@@ -139,6 +145,7 @@ namespace KinectDepthToPointCloud
             }
         }
 
+        //load the next point cloud in the pcd array
         private void LoadPointCloud()
         {
             if (!accumulateFrames)
@@ -151,16 +158,20 @@ namespace KinectDepthToPointCloud
             view1.Children.Add(GetPointCloudData(pcdFiles[currentFrame], Colors.White));
         }
 
+        //create a data object that stores the points to be loaded into the viewer
         private PointsVisual3D GetPointCloudData(string file, Color c)
         {
             Point3DCollection dataList = new Point3DCollection();
 
+            //read all lines in the file into an array
             string[] points = File.ReadAllLines(file);
 
             foreach (string point in points)
             {
+                //if the line starts with a number or a negative sign (-)
                 if (Regex.IsMatch(point, @"^\d+") || point.StartsWith("-"))
                 {
+                    //split the line based on white space, and if it has 3 or more parts add it to the list
                     string[] parts = point.Split(' ');
                     if (parts.Length >= 3)
                     {
@@ -169,6 +180,7 @@ namespace KinectDepthToPointCloud
                 }
             }
 
+            //create the PointsVisual3D to store the point data and set up parameters
             PointsVisual3D cloudPoints = new PointsVisual3D();
             cloudPoints.Color = c;
             cloudPoints.Size = 2;

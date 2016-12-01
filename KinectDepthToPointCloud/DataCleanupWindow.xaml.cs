@@ -77,16 +77,7 @@ namespace KinectDepthToPointCloud
 
         private void CleanDataRadius(string path, double radius, int minPoints)
         {
-            //TODO: use these instead, way faster than my method
-            //foreach file 
-            //pcl_outlier_removal_release.exe imageX.pcd clean/imageX-temp.pcd -method statistical -mean_k 50 -std_dev_mul 1 -inliers 0
-            //pcl_convert_pcd_ascii_binary_release.exe clean/imageX-temp.pcd clean/imageX.pcd 0
-            //File.Delete(clean/imageX-temp.pcd);
-
             string[] files = Directory.GetFiles(path);
-
-            this.CurrentFile = 1;
-            this.TotalFiles = files.Length;
 
             Directory.CreateDirectory(System.IO.Path.Combine(path, "clean"));
 
@@ -110,8 +101,6 @@ namespace KinectDepthToPointCloud
                 p.WaitForExit();
 
                 File.Delete(System.IO.Path.Combine(path, "clean", System.IO.Path.GetFileNameWithoutExtension(s) + "-temp.pcd"));
-
-                this.CurrentFile = currentFile + 1;
             }
 
         }
@@ -119,9 +108,6 @@ namespace KinectDepthToPointCloud
         private void CleanDataStatistical(string path, int meanK, double stdDevMultiplier)
         {
             string[] files = Directory.GetFiles(path);
-
-            this.CurrentFile = 1;
-            this.TotalFiles = files.Length;
 
             Directory.CreateDirectory(System.IO.Path.Combine(path, "clean"));
 
@@ -148,8 +134,6 @@ namespace KinectDepthToPointCloud
                 p.WaitForExit();
 
                 File.Delete(System.IO.Path.Combine(path, "clean", System.IO.Path.GetFileNameWithoutExtension(s) + "-temp.pcd"));
-
-                this.CurrentFile = currentFile + 1;
             }
         }
 
@@ -160,10 +144,8 @@ namespace KinectDepthToPointCloud
 
         private void MergeData(string path)
         {
+            //combine all of the point cloud files into one giant point cloud file that contains every point in the other point cloud files
             string[] files = Directory.GetFiles(path);
-
-            this.CurrentFile = 1;
-            this.TotalFiles = files.Length;
 
             Directory.CreateDirectory(System.IO.Path.Combine(path, "merge"));
 
@@ -181,8 +163,6 @@ namespace KinectDepthToPointCloud
                         data.Add(point);
                     }
                 }
-
-                this.CurrentFile = currentFile + 1;
             }
 
             using (StreamWriter streamWriter = new StreamWriter(System.IO.Path.Combine(path, "merge", "merged.pcd")))
@@ -204,6 +184,7 @@ namespace KinectDepthToPointCloud
                 }
             }
 
+            //reduce the data using the voxel grid reduction
             Process p = new Process();
             p.StartInfo.FileName = "pcl_voxel_grid_release.exe";
             p.StartInfo.Arguments = System.IO.Path.Combine(path, "merge", "merged.pcd") + " " + System.IO.Path.Combine(path, "merge", "merged-reduced.pcd");
@@ -214,64 +195,5 @@ namespace KinectDepthToPointCloud
 
             p.WaitForExit();
         }
-
-        public int CurrentPoint
-        {
-            get { return currentPoint; }
-            set
-            {
-                currentPoint = value;
-                // notify any bound elements that the value has changed
-                if (this.PropertyChanged != null)
-                {
-                    this.PropertyChanged(this, new PropertyChangedEventArgs("CurrentPoint"));
-                }
-            }
-        }
-
-        public int TotalPoints
-        {
-            get { return totalPoints; }
-            set
-            {
-                totalPoints = value;
-                // notify any bound elements that the value has changed
-                if (this.PropertyChanged != null)
-                {
-                    this.PropertyChanged(this, new PropertyChangedEventArgs("TotalPoints"));
-                }
-            }
-        }
-
-        public int CurrentFile
-        {
-            get { return currentFile; }
-            set
-            {
-                currentFile = value;
-                // notify any bound elements that the value has changed
-                if (this.PropertyChanged != null)
-                {
-                    this.PropertyChanged(this, new PropertyChangedEventArgs("CurrentPoint"));
-                }
-            }
-        }
-
-        public int TotalFiles
-        {
-            get { return totalFiles; }
-            set
-            {
-                totalFiles = value;
-                // notify any bound elements that the value has changed
-                if (this.PropertyChanged != null)
-                {
-                    this.PropertyChanged(this, new PropertyChangedEventArgs("TotalFiles"));
-                }
-            }
-        }
-
-
-
     }
 }
